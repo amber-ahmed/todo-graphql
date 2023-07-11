@@ -21,7 +21,7 @@ const client = createClient({
     },
 });
 client.on("error", (err) => console.log("Redis Client Error", err));
-(async()=>{
+(async () => {
     await client.connect()
 })()
 const resolvers = {
@@ -39,7 +39,7 @@ const resolvers = {
                         access: false,
                         msg: "Unauthorized access/wrong password",
                     }
-                    console.log('id',userFound._id)
+                console.log('id', userFound._id)
                 return {
                     access: true,
                     msg: "login successfully",
@@ -58,10 +58,10 @@ const resolvers = {
                 let todos = await client.HGETALL(id);
                 todos = Object.entries(todos).map(([name, desc]) => ({ name, desc }));
                 console.log(todos);
-                return todos
+                return { access: true, msg: 'fetch', todos }
             } catch (error) {
                 console.log(error);
-                return []
+                return { access: false, msg: 'server error' }
             }
         },
         search: async (parent, args, context) => {
@@ -121,7 +121,7 @@ const resolvers = {
             try {
                 const { name, desc } = args.input;
                 const { id } = context.headers;
-                console.log(id,name,desc)
+                console.log(id, name, desc)
                 const result = await client.HSET(id, name, desc);
                 console.log(result);
 
@@ -152,6 +152,15 @@ const resolvers = {
                 console.log(error);
                 return { access: false, msg: "server error" }
             }
+        }
+    },
+
+
+    TodosResult: {
+        __resolveType(obj) {
+            console.log(obj)
+            if (obj.todos) return "TodosSuccess"
+            return "TodosError"
         }
     }
 }

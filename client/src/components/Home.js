@@ -18,10 +18,21 @@ const Home = () => {
   const QUERY_FETCH_ALL = gql`
   query FetchAll{
     fetchall{
-        name
-        desc
+        ...on TodosSuccess{
+            access
+            msg
+            todos{
+                name
+                desc
+            }
+        }
+        ...on TodosError{
+            access
+            msg
+        }
     }
 }
+
   `
   let { data, loading, error, refetch } = useQuery(QUERY_FETCH_ALL, {
     context: {
@@ -114,7 +125,10 @@ const Home = () => {
   }
 
   useEffect(() => {
-    if (data) setTodos(data.fetchall)
+    if (data) {
+      if (data.fetchall.access)
+        setTodos(data.fetchall.todos)
+    }
     console.log(data)
   }, [data])
 
@@ -148,7 +162,8 @@ const Home = () => {
                 console.log(event.target.value)
                 refetch()
                 if (data) {
-                  setTodos(data.fetchall)
+                  if (data.fetchall.access)
+                    setTodos(data.fetchall.todos)
                   console.log(data.fetchall)
                 }
               } else {
@@ -188,7 +203,7 @@ const Home = () => {
             </th>
           </tr>
         </thead>
-        {error && <h1>something went wrong</h1>}
+        {error || (data && !data.fetchall.access) && <h1>something went wrong</h1>}
         {loading && <h1>Loading</h1>}
 
         <tbody>

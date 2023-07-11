@@ -21,10 +21,7 @@ input RegisterInput{
     username : String!
 }
 
-type Todos{
-    name : String!
-    desc : String!
-}
+
 type LoginResponse{
     access : Boolean!
     msg : String!
@@ -32,8 +29,8 @@ type LoginResponse{
 }
 type Query {
     login(input : LoiginInput!) : LoginResponse!
-    fetchall: [Todos!]
-    search(name : String!):[Todos!]
+    fetchall: TodosResult!
+    search(name : String!):[Todo!]
 }
 input AddnEditInput{
     name : String!
@@ -44,5 +41,19 @@ type Mutation{
     addnedit(input : AddnEditInput!) : Response!
     delete(name : String!) : Response!
 }
+type Todo{
+    name : String!
+    desc : String!
+}
+type TodosSuccess{
+        access : Boolean!
+        msg : String!
+        todos : [Todo!]!
+}
+type TodosError{
+        access : Boolean!
+        msg : String!
+}
+union TodosResult = TodosSuccess | TodosError
 `
 export default typeDefs
