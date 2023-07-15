@@ -19,13 +19,16 @@ const Login = () => {
   const [login, { data, loading, error }] = useLazyQuery(QUERY_LOGIN)
 
   if (loading) return <h1>Loading</h1>
-  console.log(error)
   if (error) return <h1>something went wrong</h1>
-  if (data){
+  if (data?.login?.access){
     console.log(data.login)
     localStorage.setItem('id',data.login.id)
     return <Navigate to={'/home'}  />
-  } 
+  }
+  if(data && !data?.login.access){
+    console.log(data)
+    alert(data?.login.msg)
+  }
   return (
     <section className="h-screen">
       <div className="container h-full px-6 py-24">

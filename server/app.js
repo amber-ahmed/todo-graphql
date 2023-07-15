@@ -7,7 +7,9 @@ import resolvers from './schema/resolvers.js';
 import './connectDb.js';
 import dotenv from 'dotenv';
 import socket from './socket.js';
-
+import { dirname } from "path";
+import { fileURLToPath } from "url";
+import path from "path";
 dotenv.config();
 
 const startServer = async () => {
@@ -22,7 +24,6 @@ const startServer = async () => {
                 headers,
             };
         }
-
     });
 
     await server.start();
@@ -41,7 +42,13 @@ const startServer = async () => {
 
     socket(io);
 
-    httpServer.listen({ port: 4000 }, () => {
+    const __dirname = dirname(fileURLToPath(import.meta.url));
+    app.use(express.static(path.join(__dirname, "build")));
+    app.get("/*", (req, res) => {
+      res.sendFile(path.join(__dirname, "build", "index.html"));
+    });
+    
+    httpServer.listen(4000, () => {
         console.log(`Server running at http://localhost:4000${server.graphqlPath}`);
     });
 };

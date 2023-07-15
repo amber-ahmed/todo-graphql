@@ -28,7 +28,7 @@ const resolvers = {
     Query: {
         login: async (parent, args) => {
             const { email, password } = args.input
-            console.log(args)
+            console.log(args.input)
             try {
                 const userFound = await userModel.findOne({ email });
                 if (!userFound)
@@ -53,8 +53,8 @@ const resolvers = {
         fetchall: async (parent, args, context) => {
             try {
                 console.log(context.headers)
-
                 const { id } = context.headers;
+                if(!id)throw new Error('unauthorized access')
                 let todos = await client.HGETALL(id);
                 todos = Object.entries(todos).map(([name, desc]) => ({ name, desc }));
                 console.log(todos);

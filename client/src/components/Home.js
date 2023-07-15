@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { socket } from "../utils/socket.js";
 import { gql, useLazyQuery, useMutation, useQuery } from "@apollo/client";
+import Navbar from "./Navbar.js";
 
 const Home = () => {
 
@@ -134,28 +135,15 @@ const Home = () => {
 
   return (
     <>
-      <div className="flex justify-end">
-        <button
-          onClick={() => {
-            if (window.confirm('do you really want to logout')) {
-              localStorage.removeItem('id')
-              navigate('/')
-            }
-          }}
-          type="submit"
-          className="mb-3 mt-4  mx-4 bg-[#3b5998] flex  items-center justify-center rounded bg-primary px-7 pb-2.5 pt-3 text-center text-sm font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
-        >
-          Sign Out
-        </button>
-      </div>
+      <Navbar value={'value'}/>
       <div className="mt-16">
         <label
-          for="default-search"
-          class="mb-2 mt-16 text-sm font-medium text-gray-900 sr-only dark:text-white"
+          htmlFor="default-search"
+          className="mb-2 mt-16 text-sm font-medium text-gray-900 sr-only dark:text-white"
         >
           Search
         </label>
-        <div class="relative">
+        <div className="relative">
           <input
             onChange={(event) => {
               if (!event.target.value) {
@@ -179,77 +167,76 @@ const Home = () => {
             ref={searchText}
             type="search"
             id="default-search"
-            class="block w-4/5 mx-auto p-4 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            className="block w-4/5 mx-auto p-4 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             placeholder="Search by name or description"
             required
           />
         </div>
       </div>
-
-      <table class="table-auto w-full mt-8  text-left text-gray-500 dark:text-gray-400">
+      {error || (data && !data.fetchall.access) && <h1>something went wrong</h1>}
+      {loading && <h1>Loading</h1>}
+      <table className="table-auto w-full mt-8  text-left text-gray-500 dark:text-gray-400">
         <thead className="text-xl py-32 text-gray-700 uppercase bg-blue-200 dark:bg-gray-700 dark:text-gray-400">
           <tr>
-            <th scope="col" class="px-6 py-3">
+            <th scope="col" className="px-6 py-3">
               Name
             </th>
-            <th scope="col" class="px-6 py-3">
+            <th scope="col" className="px-6 py-3">
               Description
             </th>
-            <th scope="col" class="px-6 py-3">
+            <th scope="col" className="px-6 py-3">
               Edit
             </th>
-            <th scope="col" class="px-6 py-3">
+            <th scope="col" className="px-6 py-3">
               Delete
             </th>
           </tr>
         </thead>
-        {error || (data && !data.fetchall.access) && <h1>something went wrong</h1>}
-        {loading && <h1>Loading</h1>}
+
 
         <tbody>
           {
-            todos.map((todo) => (
-              <>
-                <tr className="bg-white border-b hover:bg-gray-200 dark:bg-gray-800 dark:border-gray-700">
-                  <td
-                    scope="row"
-                    class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-                  >
-                    {todo.name}
-                  </td>
-                  <td
-                    scope="row"
-                    class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-                  >
-                    {todo.desc}
-                  </td>
-                  <td
-                    scope="row"
-                    class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-                  >
-                    <i
-                      onClick={() => {
-                        setIsAdd(false);
-                        setCurrentTask(todo);
-                        setEditModal("");
-                      }}
-                      className="fa fa-edit font-bold  text-blue-700  text-[24px] cursor-pointer"
-                    ></i>
-                  </td>
-                  <td
-                    scope="row"
-                    class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-                  >
-                    <i
-                      onClick={() => {
-                        setCurrentTask(todo);
-                        setDeleteModal("");
-                      }}
-                      className="fa fa-trash-o font-bold text-blue-700  text-[24px]    cursor-pointer"
-                    ></i>
-                  </td>
-                </tr>
-              </>))
+            todos.map((todo, index) => (
+              <tr key={index + 1} className="bg-white border-b hover:bg-gray-200 dark:bg-gray-800 dark:border-gray-700">
+                <td
+                  scope="row"
+                  className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                >
+                  {todo.name}
+                </td>
+                <td
+                  scope="row"
+                  className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                >
+                  {todo.desc}
+                </td>
+                <td
+                  scope="row"
+                  className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                >
+                  <i
+                    onClick={() => {
+                      setIsAdd(false);
+                      setCurrentTask(todo);
+                      setEditModal("");
+                    }}
+                    className="fa fa-edit font-bold  text-blue-700  text-[24px] cursor-pointer"
+                  ></i>
+                </td>
+                <td
+                  scope="row"
+                  className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                >
+                  <i
+                    onClick={() => {
+                      setCurrentTask(todo);
+                      setDeleteModal("");
+                    }}
+                    className="fa fa-trash-o font-bold text-blue-700  text-[24px]    cursor-pointer"
+                  ></i>
+                </td>
+              </tr>
+            ))
           }
 
         </tbody>
@@ -258,7 +245,7 @@ const Home = () => {
       {/* <!-- Edit modal --> */}
       <div
         id="authentication-modal"
-        tabindex="-1"
+        tabIndex="-1"
         aria-hidden="true"
         className={`${editModal} fixed top-8  z-50  w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full`}
       >
@@ -282,9 +269,9 @@ const Home = () => {
                 xmlns="http://www.w3.org/2000/svg"
               >
                 <path
-                  fill-rule="evenodd"
+                  fillRule="evenodd"
                   d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                  clip-rule="evenodd"
+                  clipRule="evenodd"
                 ></path>
               </svg>
               <span className="sr-only">Close modal</span>
@@ -296,7 +283,7 @@ const Home = () => {
               <form className="space-y-6" onSubmit={addnEdit}>
                 <div>
                   <label
-                    for="name"
+                    htmlFor="name"
                     className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                   >
                     Name
@@ -317,7 +304,7 @@ const Home = () => {
                 </div>
                 <div>
                   <label
-                    for="description"
+                    htmlFor="description"
                     className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                   >
                     Description
@@ -352,7 +339,7 @@ const Home = () => {
       {/*delete modl*/}
       <div
         id="authentication-modal"
-        tabindex="-1"
+        tabIndex="-1"
         aria-hidden="true"
         className={`${deleteModal} fixed top-8  z-50  w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full`}
       >
@@ -373,9 +360,9 @@ const Home = () => {
                 xmlns="http://www.w3.org/2000/svg"
               >
                 <path
-                  fill-rule="evenodd"
+                  fillRule="evenodd"
                   d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                  clip-rule="evenodd"
+                  clipRule="evenodd"
                 ></path>
               </svg>
               <span className="sr-only">Close modal</span>
@@ -387,7 +374,7 @@ const Home = () => {
               <form className="space-y-6" onSubmit={deleteTask}>
                 <div>
                   <label
-                    for="name"
+                    htmlFor="name"
                     className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                   >
                     Name
@@ -401,7 +388,7 @@ const Home = () => {
                 </div>
                 <div>
                   <label
-                    for="description"
+                    htmlFor="description"
                     className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                   >
                     Description
@@ -435,7 +422,7 @@ const Home = () => {
           setIsAdd(true);
           setEditModal("");
         }}
-        class="fixed text-blue-700 bottom-8 right-8 cursor-pointer text-[80px] fa fa-plus"
+        className="fixed text-blue-700 bottom-8 right-8 cursor-pointer text-[80px] fa fa-plus"
       ></i>
     </>
   );
