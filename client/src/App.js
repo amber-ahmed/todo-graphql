@@ -8,15 +8,15 @@ import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client'
 function App() {
   const client = new ApolloClient({
     cache : new InMemoryCache(),
-    uri: "https://tasky.amberahmed.in"
+    uri: process.env.REACT_APP_SERVER_URL
   })
   return (
     <ApolloProvider client={client}>
 
     <Routes>
+    <Route path='/' element={<Register/>}/>
       <Route path='/login' element={<Login/>}/>
       <Route path='/home' element={<Home/>}/>
-      <Route path='/register' element={<Register/>}/>
     </Routes>
     </ApolloProvider>
 

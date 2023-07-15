@@ -49,7 +49,7 @@ const startServer = async () => {
     });
     
     httpServer.listen(process.env.PORT, () => {
-        console.log(`Server running at http://localhost:4000${server.graphqlPath}`);
+        console.log(`Server running at ${server.graphqlPath}`);
     });
 };
 
