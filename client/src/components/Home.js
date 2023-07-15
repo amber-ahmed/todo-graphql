@@ -109,8 +109,8 @@ const Home = () => {
         }
       }
     })
-    socket.emit('todo-added', localStorage.getItem('id'))
     refetch()
+    socket.emit('todo-added', localStorage.getItem('id'))
     setEditModal("hidden");
   }
 
@@ -121,8 +121,8 @@ const Home = () => {
         deleteName: currentTask.name
       }
     })
-    socket.emit('todo-deleted', localStorage.getItem('id'))
     refetch()
+    socket.emit('todo-deleted', localStorage.getItem('id'))
     setDeleteModal("hidden")
   }
 
