@@ -109,9 +109,9 @@ const Home = () => {
         }
       }
     })
+    socket.emit('todo-added', localStorage.getItem('id'))
     refetch()
     setEditModal("hidden");
-    socket.emit('todo-added', localStorage.getItem('id'))
   }
 
   async function deleteTask(e) {
@@ -121,8 +121,9 @@ const Home = () => {
         deleteName: currentTask.name
       }
     })
-    setDeleteModal("hidden")
     socket.emit('todo-deleted', localStorage.getItem('id'))
+    refetch()
+    setDeleteModal("hidden")
   }
 
   useEffect(() => {

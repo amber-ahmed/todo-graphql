@@ -1,6 +1,6 @@
 import { io } from "socket.io-client";
-const socket = io(process.env.REACT_APP_SERVER_URL)
-console.log(process.env.REACT_APP_SERVER_URL)
+const socket = io(process.env.REACT_APP_SOCKET_URL)
+console.log(process.env.REACT_APP_SOCKET_URL)
 // function addTodo(msg) {
 //     socket.emit('todo-added', localStorage.getItem('id'), msg)
 // }
