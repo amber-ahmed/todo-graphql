@@ -48,7 +48,7 @@ const startServer = async () => {
       res.sendFile(path.join(__dirname, "build", "index.html"));
     });
     
-    httpServer.listen(4000, () => {
+    httpServer.listen(process.env.PORT, () => {
         console.log(`Server running at http://localhost:4000${server.graphqlPath}`);
     });
 };
